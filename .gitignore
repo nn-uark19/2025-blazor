@@ -1,0 +1,56 @@
+# Build / Visual Studio
+.vs/
+.vscode/
+bin/
+obj/
+artifacts/
+publish/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.log
+TestResults/
+
+# Rider
+.idea/
+*.sln.iml
+*.sln.DotSettings.user
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node / JS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Rider / ReSharper caches
+_ReSharper*/
+*.DotSettings.user
+
+# Blazor / static publish artifacts (generated at build/publish)
+wwwroot/_framework/
+wwwroot/_content/
+wwwroot/*.br
+wwwroot/*.gz
+wwwroot/**/*.map
+wwwroot/*.dev.js
+
+# Ignore generated client-side resource folders (adjust if you check these in)
+dist/
+wwwroot/dist/
+
+# Misc
+coverage/
+*.coverage
+coverage*.xml
