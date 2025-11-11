@@ -2,13 +2,74 @@ namespace NnBlazorProj.Repository;
 
 public static class MonthRepository
 {
-    private static readonly List<string> monthGroups = new List<string>
+    // ----------------------------------------
+    // STATIC DATA SOURCE: Month groups + images
+    // ----------------------------------------
+    private static readonly List<MonthGroup> monthGroups = new()
     {
-        "January – March",
-        "April – July",
-        "August – October",
-        "November – December"
+        new MonthGroup
+        {
+            Key = "spring",
+            Name = "January – March",
+            Months = new() { 1, 2, 3 },
+            ImagePath = "images/seasons/spring.jpeg"
+        },
+        new MonthGroup
+        {
+            Key = "summer",
+            Name = "April – July",
+            Months = new() { 4, 5, 6, 7 },
+            ImagePath = "images/seasons/summer.jpg"
+        },
+        new MonthGroup
+        {
+            Key = "fall",
+            Name = "August – October",
+            Months = new() { 8, 9, 10 },
+            ImagePath = "images/seasons/fall.png"
+        },
+        new MonthGroup
+        {
+            Key = "winter",
+            Name = "November – December",
+            Months = new() { 11, 12 },
+            ImagePath = "images/seasons/winter.jpg"
+        }
     };
 
-    public static List<string> GetMonthGroups() => monthGroups;
+    // ----------------------------------------
+    // PUBLIC METHODS
+    // ----------------------------------------
+
+    // Return all groups
+    public static List<MonthGroup> GetMonthGroups() => monthGroups;
+
+    // Find a group by its name (case-insensitive)
+    public static MonthGroup? GetByName(string name) =>
+        monthGroups.FirstOrDefault(
+            g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+        );
+
+    // Get numeric month list for a given group name
+    public static List<int> GetMonths(string name) =>
+        GetByName(name)?.Months ?? new List<int>();
+
+    // Find which group name a specific month belongs to
+    public static string? GetGroupNameByMonth(int month) =>
+        monthGroups.FirstOrDefault(g => g.Months.Contains(month))?.Name;
+
+    // Find image path for a given group name
+    public static string? GetImageByName(string name) =>
+        GetByName(name)?.ImagePath;
+}
+
+// ----------------------------------------
+// DTO CLASS: MonthGroup
+// ----------------------------------------
+public class MonthGroup
+{
+    public string Name { get; set; } = string.Empty;       // e.g. "January – March"
+    public List<int> Months { get; set; } = new();         // e.g. [1, 2, 3]
+    public string Key { get; set; } = string.Empty;        // e.g. "spring"
+    public string ImagePath { get; set; } = string.Empty;  // e.g. "images/seasons/spring.jpg"
 }
