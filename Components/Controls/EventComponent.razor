@@ -1,0 +1,24 @@
+<div>
+    @foreach (var mg in monthGroups)
+    {
+        <button>@mg</button>
+    }
+</div>
+
+<ul>
+    @if (eventList != null)
+    {
+        foreach (var e in eventList)
+        {
+            <li>
+                <strong>@e.Name</strong><br/>
+                Month: @e.Month — @(e.IsFree ? "Free" : "Paid")
+            </li>
+        }
+    }
+</ul>
+
+@code {
+    private List<EventDto> eventList = EventRepository.GetByMonth(2);
+    private List<string> monthGroups = MonthRepository.GetMonthGroups();
+}
