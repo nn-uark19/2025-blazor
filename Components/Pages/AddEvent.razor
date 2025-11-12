@@ -1,0 +1,39 @@
+@page "/events/add"
+@inject NavigationManager NavigationManager
+
+<h2>Add Event</h2>
+
+<EditForm Model="@_newEvent" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Name</label><br />
+        <InputText @bind-Value="_newEvent.Name" />
+    </div>
+
+    <div>
+        <label>Month</label><br />
+        <InputNumber @bind-Value="_newEvent.Month" />
+    </div>
+
+    <div>
+        <label>
+            <InputCheckbox @bind-Value="_newEvent.IsFree" /> Is Free
+        </label>
+    </div>
+
+    <div style="margin-top:8px">
+        <button type="submit">Save</button>
+    </div>
+</EditForm>
+
+@code {
+    private readonly EventDto _newEvent = new EventDto();
+
+    private void HandleValidSubmit()
+    {
+        EventRepository.Add(_newEvent);
+        NavigationManager.NavigateTo("/events");
+    }
+}

@@ -1,5 +1,6 @@
 @inject NavigationManager NavigationManager
 
+@* Month buttons: renders a button for each month group *@
 <div>
     @foreach (var mg in _monthGroups)
     {
@@ -9,6 +10,7 @@
     }
 </div>
 
+@* Selected month display: show image and name for the active group *@
 @if (_selectedMonthGroup != null)
 {
     <div>
@@ -19,6 +21,10 @@
     </div>
 }
 
+@* Add Event button: navigates to the Add Event page *@
+<button type="button" @onclick="AddEvent">Add Event</button>
+
+@* Event list: lists events for the selected month group *@
 @if (_eventList.Count > 0)
 {
     <ul>
@@ -63,7 +69,11 @@
 
     private void EditEvent(int id)
     {
-        // navigate to the edit page with the event id
         NavigationManager.NavigateTo($"/events/edit/{id}");
+    }
+    
+    private void AddEvent()
+    {
+        NavigationManager.NavigateTo("/events/add");
     }
 }
