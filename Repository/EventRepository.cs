@@ -8,44 +8,49 @@ public static class EventRepository
     // STATIC DATA SOURCE
     // -------------------------
     private static readonly List<EventDto> events = new List<EventDto>
-    {
-        // --- JANUARY ---
-        new EventDto { EventId = 1,  Name = "New Year’s Day (US)", Month = 1,  IsFree = true },
-        new EventDto { EventId = 2,  Name = "Tết Nguyên Đán (Vietnamese Lunar New Year)", Month = 1, IsFree = true },
+{
+    // --- JANUARY ---
+    new EventDto { EventId = 1,  Name = "King Cake Bake-Off – Metairie Bakery", Month = 1,  IsFree = false },
+    new EventDto { EventId = 2,  Name = "MQVN Farmers Market (Village de l’Est)", Month = 1, IsFree = true  },
 
-        // --- FEBRUARY ---
-        new EventDto { EventId = 3,  Name = "Valentine’s Day", Month = 2,  IsFree = false },
-        new EventDto { EventId = 4,  Name = "President’s Day (US)", Month = 2,  IsFree = true },
-        new EventDto { EventId = 5,  Name = "Lễ Hội Rằm Tháng Giêng (Full Moon Festival)", Month = 2, IsFree = true },
+    // --- FEBRUARY ---
+    new EventDto { EventId = 3,  Name = "Vietnamese Coffee Workshop – Westbank", Month = 2, IsFree = false },
+    new EventDto { EventId = 4,  Name = "Vietnamese Storytime – East Bank Library", Month = 2, IsFree = true },
 
-        // --- MARCH / APRIL ---
-        new EventDto { EventId = 6,  Name = "Easter Sunday", Month = 3,  IsFree = true },
-        new EventDto { EventId = 7,  Name = "Giỗ Tổ Hùng Vương (Hung Kings’ Commemoration Day)", Month = 4, IsFree = true },
-        new EventDto { EventId = 8,  Name = "Vietnamese Áo Dài Festival", Month = 4, IsFree = false },
+    // --- MARCH ---
+    new EventDto { EventId = 5,  Name = "City Park Families 3K Fun Run", Month = 3, IsFree = true },
+    new EventDto { EventId = 6,  Name = "NOLA Night Market (Westbank)", Month = 3, IsFree = true },
 
-        // --- MAY ---
-        new EventDto { EventId = 9,  Name = "Labor Day (International) / Quốc Tế Lao Động 1/5", Month = 5,  IsFree = true },
-        new EventDto { EventId = 10, Name = "Memorial Day (US)", Month = 5,  IsFree = true },
+    // --- APRIL ---
+    new EventDto { EventId = 7,  Name = "Vietnamese Cooking Class: Bánh Xèo", Month = 4, IsFree = false },
+    new EventDto { EventId = 8,  Name = "Lafreniere Park Kite Day", Month = 4, IsFree = true },
 
-        // --- JUNE / JULY ---
-        new EventDto { EventId = 11, Name = "Juneteenth (US)", Month = 6,  IsFree = true },
-        new EventDto { EventId = 12, Name = "Fourth of July (US Independence Day)", Month = 7,  IsFree = true },
-        new EventDto { EventId = 13, Name = "Bánh Mì & Phở Festival", Month = 7,  IsFree = false },
+    // --- MAY ---
+    new EventDto { EventId = 9,  Name = "Bucktown Marina Sunset Walk Meetup", Month = 5, IsFree = true },
+    new EventDto { EventId = 10, Name = "Phở Cook-Off – Community Center", Month = 5, IsFree = false },
 
-        // --- AUGUST / SEPTEMBER ---
-        new EventDto { EventId = 14, Name = "Vu Lan Báo Hiếu (Ullambana – Mother’s Day in Vietnam)", Month = 8,  IsFree = true },
-        new EventDto { EventId = 15, Name = "Mid-Autumn Festival (Tết Trung Thu)", Month = 9,  IsFree = true },
-        new EventDto { EventId = 16, Name = "Mooncake Tasting (Bánh Trung Thu)", Month = 9,  IsFree = false },
+    // --- JUNE ---
+    new EventDto { EventId = 11, Name = "Saigon Plaza Night Market (Gretna)", Month = 6, IsFree = true },
+    new EventDto { EventId = 12, Name = "Bayou Segnette Family Picnic Meetup", Month = 6, IsFree = true },
 
-        // --- OCTOBER / NOVEMBER ---
-        new EventDto { EventId = 17, Name = "Halloween (US)", Month = 10,  IsFree = false },
-        new EventDto { EventId = 18, Name = "Thanksgiving Day (US)", Month = 11,  IsFree = true },
-        new EventDto { EventId = 19, Name = "Ngày Nhà Giáo Việt Nam (Vietnamese Teachers’ Day)", Month = 11,  IsFree = true },
+    // --- JULY ---
+    new EventDto { EventId = 13, Name = "Metairie Road Summer Art Stroll", Month = 7, IsFree = true },
+    new EventDto { EventId = 14, Name = "Lion Dance Workshop – Chùa Linh Sơn", Month = 7, IsFree = false },
 
-        // --- DECEMBER ---
-        new EventDto { EventId = 20, Name = "Christmas Day", Month = 12,  IsFree = true },
-        new EventDto { EventId = 21, Name = "New Year’s Eve Celebrations", Month = 12,  IsFree = false },
-    };
+    // --- AUGUST ---
+    new EventDto { EventId = 15, Name = "Back-to-School Swap – West Esplanade", Month = 8, IsFree = true },
+    new EventDto { EventId = 16, Name = "Lantern Craft Workshop (Đèn Lồng)", Month = 8, IsFree = false },
+
+    // --- SEPTEMBER ---
+    new EventDto { EventId = 17, Name = "City Park Moon-Viewing Picnic", Month = 9, IsFree = true },
+    new EventDto { EventId = 18, Name = "Mooncake Baking Demo", Month = 9, IsFree = false },
+
+    // --- OCTOBER ---
+    new EventDto { EventId = 19, Name = "Vietnamese Book Club – Fall Meetup", Month = 10, IsFree = true },
+
+    // --- NOVEMBER / DECEMBER ---
+    new EventDto { EventId = 20, Name = "Lafreniere Park Lights Walk", Month = 12, IsFree = true }
+};
 
     // -------------------------
     // STATIC METHODS

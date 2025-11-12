@@ -1,0 +1,24 @@
+@page "/events/edit/{EventId:int}"
+
+<h2>Edit Event</h2>
+
+@if (eventItem != null)
+{
+    <div>
+        <p><strong>Name:</strong> @eventItem.Name</p>
+        <p><strong>Month:</strong> @eventItem.Month</p>
+        <p><strong>Is Free:</strong> @(eventItem.IsFree ? "Yes" : "No")</p>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private EventDto? eventItem;
+
+    protected override void OnParametersSet()
+    {
+        eventItem = EventRepository.GetById(EventId);
+    }
+}

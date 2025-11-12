@@ -9,8 +9,7 @@ public class EventDto
         var random = new Random();
         int randomNumber = random.Next(0, 2);
         IsFree = randomNumber == 1;
-
-        // default to current month
+        
         Month = DateTime.Now.Month;
     }
 

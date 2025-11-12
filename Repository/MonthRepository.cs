@@ -17,22 +17,22 @@ public static class MonthRepository
         new MonthGroup
         {
             Key = "summer",
-            Name = "April – July",
-            Months = new() { 4, 5, 6, 7 },
+            Name = "April – June",
+            Months = new() { 4, 5, 6 },
             ImagePath = "images/seasons/summer.jpg"
         },
         new MonthGroup
         {
             Key = "fall",
-            Name = "August – October",
-            Months = new() { 8, 9, 10 },
+            Name = "July – September",
+            Months = new() { 7, 8, 9 },
             ImagePath = "images/seasons/fall.png"
         },
         new MonthGroup
         {
             Key = "winter",
-            Name = "November – December",
-            Months = new() { 11, 12 },
+            Name = "October – December",
+            Months = new() { 10, 11, 12 },
             ImagePath = "images/seasons/winter.jpg"
         }
     };
@@ -45,7 +45,7 @@ public static class MonthRepository
     public static List<MonthGroup> GetMonthGroups() => monthGroups;
 
     // Find a group by its name (case-insensitive)
-    public static MonthGroup? GetByName(string name) =>
+    private static MonthGroup? GetByName(string name) =>
         monthGroups.FirstOrDefault(
             g => g.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
         );

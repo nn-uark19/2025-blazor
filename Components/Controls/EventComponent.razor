@@ -1,50 +1,37 @@
+@inject NavigationManager NavigationManager
 
-<div class="mb-3">
-    <div class="btn-group" role="group" aria-label="Month groups">
-        @foreach (var mg in monthGroups)
-        {
-            <button type="button"
-                    class="btn btn-outline-primary @(selectedMonthGroup?.Name == mg.Name ? "active" : "")"
-                    aria-pressed="@(selectedMonthGroup?.Name == mg.Name)"
-                    @onclick="() => SelectGroup(mg)">
-                @mg.Name
-            </button>
-        }
-    </div>
+<div>
+    @foreach (var mg in monthGroups)
+    {
+        <button type="button" @onclick="() => SelectGroup(mg)">
+            @mg.Name@(selectedMonthGroup == mg ? " (selected)" : "")
+        </button>
+    }
 </div>
 
-@if (selectedMonthGroup is not null)
+@if (selectedMonthGroup != null)
 {
-    <div class="my-3 text-center">
+    <div>
         <img src="@selectedMonthGroup.ImagePath"
              alt="@selectedMonthGroup.Key"
-             class="img-fluid w-100 rounded shadow-sm object-fit-cover"
-             style="max-width:300px; height:300px;" />
-        <h5 class="mt-2">@selectedMonthGroup.Name</h5>
+             width="300" height="300" />
+        <h3>@selectedMonthGroup.Name</h3>
     </div>
 }
 
-<ul class="list-unstyled">
-    @if (events != null)
-    {
-        foreach (var e in events)
+@if (events != null && events.Count > 0)
+{
+    <ul>
+        @foreach (var e in events)
         {
-            <li class="mb-2">
-                <div class="card p-2">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>@e.Name</strong><br />
-                            <small class="text-muted">Month: @e.Month</small>
-                        </div>
-                        <span class="badge bg-@(e.IsFree ? "success" : "secondary")">
-                            @(e.IsFree ? "Free" : "Paid")
-                        </span>
-                    </div>
-                </div>
+            <li>
+                <strong>@e.Name</strong>
+                Month: @e.Month — @(e.IsFree ? "Free" : "Paid")
+                <button @onclick="() => EditEvent(e.EventId)">Edit</button>
             </li>
         }
-    }
-</ul>
+    </ul>
+}
 
 @code {
     private List<EventDto> events = new();
@@ -53,14 +40,10 @@
 
     protected override void OnInitialized()
     {
-        // Load all groups
         monthGroups = MonthRepository.GetMonthGroups();
-        
-        // Default select the first one
         selectedMonthGroup = monthGroups.FirstOrDefault();
 
-        // Load events that belong to the first group
-        if (selectedMonthGroup is not null)
+        if (selectedMonthGroup != null)
         {
             var months = selectedMonthGroup.Months;
             events = EventRepository.GetAll()
@@ -73,10 +56,14 @@
     {
         selectedMonthGroup = group;
         var months = group.Months;
-
-        // Filter events that belong to the selected group
         events = EventRepository.GetAll()
             .Where(e => months.Contains(e.Month))
             .ToList();
+    }
+
+    private void EditEvent(int id)
+    {
+        // navigate to the edit page with the event id
+        NavigationManager.NavigateTo($"/events/edit/{id}");
     }
 }
