@@ -1,24 +1,50 @@
 @page "/events/edit/{EventId:int}"
 
 <h2>Edit Event</h2>
-
-@if (eventItem != null)
+@if (_eventItem != null)
 {
-    <div>
-        <p><strong>Name:</strong> @eventItem.Name</p>
-        <p><strong>Month:</strong> @eventItem.Month</p>
-        <p><strong>Is Free:</strong> @(eventItem.IsFree ? "Yes" : "No")</p>
-    </div>
+    <EditForm Model="@_eventItem" OnValidSubmit="SaveForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label>Name</label><br />
+            <InputText @bind-Value="_eventItem.Name" />
+            <ValidationMessage For="@(() => _eventItem.Name)" />
+        </div>
+
+        <div>
+            <label>Month</label><br />
+            <InputNumber @bind-Value="_eventItem.Month" min="1" max="12" />
+            <ValidationMessage For="@(() => _eventItem.Month)" />
+        </div>
+
+        <div>
+            <label>
+                <InputCheckbox @bind-Value="_eventItem.IsFree" /> Is Free
+            </label>
+        </div>
+
+        <div style="margin-top:8px">
+            <button type="submit">Save</button>
+        </div>
+    </EditForm>
 }
 
 @code {
     [Parameter]
     public int EventId { get; set; }
 
-    private EventDto? eventItem;
+    private EventDto? _eventItem;
 
     protected override void OnParametersSet()
     {
-        eventItem = EventRepository.GetById(EventId);
+        _eventItem = EventRepository.GetById(EventId);
+    }
+
+    private void SaveForm()
+    {
+        if (_eventItem == null) return;
+        EventRepository.Update(_eventItem);
     }
 }

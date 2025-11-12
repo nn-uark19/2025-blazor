@@ -1,28 +1,28 @@
 @inject NavigationManager NavigationManager
 
 <div>
-    @foreach (var mg in monthGroups)
+    @foreach (var mg in _monthGroups)
     {
         <button type="button" @onclick="() => SelectGroup(mg)">
-            @mg.Name@(selectedMonthGroup == mg ? " (selected)" : "")
+            @mg.Name@(_selectedMonthGroup == mg ? " (selected)" : "")
         </button>
     }
 </div>
 
-@if (selectedMonthGroup != null)
+@if (_selectedMonthGroup != null)
 {
     <div>
-        <img src="@selectedMonthGroup.ImagePath"
-             alt="@selectedMonthGroup.Key"
+        <img src="@_selectedMonthGroup.ImagePath"
+             alt="@_selectedMonthGroup.Key"
              width="300" height="300" />
-        <h3>@selectedMonthGroup.Name</h3>
+        <h3>@_selectedMonthGroup.Name</h3>
     </div>
 }
 
-@if (events != null && events.Count > 0)
+@if (_eventList.Count > 0)
 {
     <ul>
-        @foreach (var e in events)
+        @foreach (var e in _eventList)
         {
             <li>
                 <strong>@e.Name</strong>
@@ -34,19 +34,19 @@
 }
 
 @code {
-    private List<EventDto> events = new();
-    private List<MonthGroup> monthGroups = new();
-    private MonthGroup? selectedMonthGroup;
+    private List<EventDto> _eventList = new();
+    private List<MonthGroup> _monthGroups = new();
+    private MonthGroup? _selectedMonthGroup;
 
     protected override void OnInitialized()
     {
-        monthGroups = MonthRepository.GetMonthGroups();
-        selectedMonthGroup = monthGroups.FirstOrDefault();
+        _monthGroups = MonthRepository.GetMonthGroups();
+        _selectedMonthGroup = _monthGroups.FirstOrDefault();
 
-        if (selectedMonthGroup != null)
+        if (_selectedMonthGroup != null)
         {
-            var months = selectedMonthGroup.Months;
-            events = EventRepository.GetAll()
+            var months = _selectedMonthGroup.Months;
+            _eventList = EventRepository.GetAll()
                 .Where(e => months.Contains(e.Month))
                 .ToList();
         }
@@ -54,9 +54,9 @@
 
     private void SelectGroup(MonthGroup group)
     {
-        selectedMonthGroup = group;
+        _selectedMonthGroup = group;
         var months = group.Months;
-        events = EventRepository.GetAll()
+        _eventList = EventRepository.GetAll()
             .Where(e => months.Contains(e.Month))
             .ToList();
     }

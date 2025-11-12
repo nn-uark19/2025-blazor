@@ -19,6 +19,7 @@ public class EventDto
     [Required]
     public string? Name { get; set; }
 
+    [Required]
     [Range(1, 12, ErrorMessage = "Month must be between 1 and 12.")]
     public int Month { get; set; }
 }
