@@ -1,10 +1,9 @@
 @* Event list component *@
-@inject NavigationManager NavigationManager
 
 @if (EventList != null && EventList.Count > 0)
 {
     <ul>
-        <Virtualize Items="EventList"Context="eventItem">
+        <Virtualize Items="EventList" Context="eventItem">
             <EventItemComponent Event="eventItem" />
         </Virtualize>
     </ul>

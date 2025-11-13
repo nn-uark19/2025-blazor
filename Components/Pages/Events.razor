@@ -9,14 +9,7 @@
 </div>
 
 @* Month buttons: renders a button for each month group *@
-<div>
-    @foreach (var mg in _monthGroups)
-    {
-        <button type="button" @onclick="() => SelectGroup(mg)">
-            @mg.Name@((_selectedMonthGroup == mg && string.IsNullOrWhiteSpace(_searchText)) ? " (selected)" : "")
-        </button>
-    }
-</div>
+<CityListComponent MonthGroups="_monthGroups" SelectedMonthGroup="_selectedMonthGroup" SelectMonthGroupCallBack="OnMonthSelected" />
 
 @* Selected month display: show image and name for the active group *@
 @if (_selectedMonthGroup != null)
@@ -63,15 +56,19 @@
                 .ToList();
         }
     }
-
-    // Triggered when the user clicks a month group button; updates the selected group and its events
-    private void SelectGroup(MonthGroup group)
+    
+    // Called when CityListComponent notifies parent of a month-group selection
+    private void OnMonthSelected(MonthGroup? group)
     {
         _selectedMonthGroup = group;
-        var months = group.Months;
-        _eventList = EventRepository.GetAll()
-            .Where(e => months.Contains(e.Month))
-            .ToList();
+
+        if (_selectedMonthGroup != null)
+        {
+            var months = _selectedMonthGroup.Months;
+            _eventList = EventRepository.GetAll()
+                .Where(e => months.Contains(e.Month))
+                .ToList();
+        }
     }
     
     // Triggered when the user clicks the Add Event button; navigates to the add-event page

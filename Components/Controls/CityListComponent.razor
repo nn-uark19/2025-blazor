@@ -1,0 +1,23 @@
+<div>
+    @if (MonthGroups != null)
+    {
+        @foreach (var monthGroup in MonthGroups)
+        {
+            <button type="button" @onclick="() => SelectGroup(monthGroup)">
+                @monthGroup.Name@( SelectedMonthGroup == monthGroup ? " (selected)" : "" )
+            </button>
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public List<MonthGroup>? MonthGroups { get; set; }
+    [Parameter] public MonthGroup? SelectedMonthGroup { get; set; }
+    [Parameter] public EventCallback<MonthGroup?> SelectMonthGroupCallBack { get; set; }
+    
+    // Triggered when the user clicks a month group button; notifies the parent of the selection
+    private void SelectGroup(MonthGroup monthGroup)
+    {
+        SelectMonthGroupCallBack.InvokeAsync(monthGroup);
+    }
+}
