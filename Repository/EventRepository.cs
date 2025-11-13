@@ -7,7 +7,7 @@ public static class EventRepository
     // -------------------------
     // STATIC DATA SOURCE
     // -------------------------
-    private static readonly List<EventDto> events = new()
+    private static readonly List<EventDto> Events = new()
 {
     // --- 1–3 ---
     new EventDto { EventId = 1,  Name = "King Cake Bake-Off – Metairie Bakery",          Month = 1, IsFree = false },
@@ -39,13 +39,13 @@ public static class EventRepository
     // -------------------------
 
     public static List<EventDto> GetAll() =>
-        events.OrderBy(e => e.Month).ThenBy(e => e.Name).ToList();
+        Events.OrderBy(e => e.Month).ThenBy(e => e.Name).ToList();
 
     public static EventDto? GetById(int id) =>
-        events.FirstOrDefault(e => e.EventId == id);
+        Events.FirstOrDefault(e => e.EventId == id);
 
     public static List<EventDto> GetByMonth(int month) =>
-        events.Where(e => e.Month == month)
+        Events.Where(e => e.Month == month)
               .OrderBy(e => e.Name)
               .ToList();
 
@@ -55,7 +55,7 @@ public static class EventRepository
             return GetAll();
 
         keyword = keyword.Trim().ToLower();
-        return events
+        return Events
             .Where(e => e.Name.ToLower().Contains(keyword))
             .OrderBy(e => e.Month)
             .ThenBy(e => e.Name)
@@ -64,14 +64,14 @@ public static class EventRepository
 
     public static void Add(EventDto e)
     {
-        int nextId = events.Max(x => x.EventId) + 1;
+        int nextId = Events.Max(x => x.EventId) + 1;
         e.EventId = nextId;
-        events.Add(e);
+        Events.Add(e);
     }
 
     public static void Update(EventDto e)
     {
-        var existing = events.FirstOrDefault(x => x.EventId == e.EventId);
+        var existing = Events.FirstOrDefault(x => x.EventId == e.EventId);
         if (existing is null) return;
 
         existing.Name = e.Name;
@@ -81,8 +81,8 @@ public static class EventRepository
 
     public static void Delete(int id)
     {
-        var existing = events.FirstOrDefault(x => x.EventId == id);
+        var existing = Events.FirstOrDefault(x => x.EventId == id);
         if (existing is not null)
-            events.Remove(existing);
+            Events.Remove(existing);
     }
 }

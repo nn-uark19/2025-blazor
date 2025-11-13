@@ -47,8 +47,6 @@
     {
         if (_eventItem == null) return;
         EventRepository.Update(_eventItem);
-        
-        // redirect to events list after save
         NavigationManager.NavigateTo("/events");
     }
 }

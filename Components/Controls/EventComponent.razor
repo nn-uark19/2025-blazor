@@ -1,11 +1,16 @@
 @inject NavigationManager NavigationManager
 
+@* Search box: allows users to type and filter events by name dynamically *@
+<div>
+    <input @bind-value="SearchText" @bind-value:event="oninput" placeholder="Search events by name" />
+</div>
+
 @* Month buttons: renders a button for each month group *@
 <div>
     @foreach (var mg in _monthGroups)
     {
         <button type="button" @onclick="() => SelectGroup(mg)">
-            @mg.Name@(_selectedMonthGroup == mg ? " (selected)" : "")
+            @mg.Name@((_selectedMonthGroup == mg && string.IsNullOrWhiteSpace(_searchText)) ? " (selected)" : "")
         </button>
     }
 </div>
@@ -43,6 +48,16 @@
     private List<EventDto> _eventList = new();
     private List<MonthGroup> _monthGroups = new();
     private MonthGroup? _selectedMonthGroup;
+    private string _searchText = string.Empty;
+    private string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            _searchText = value;
+            _eventList = EventRepository.SearchByName(_searchText);
+        }
+    }
 
     protected override void OnInitialized()
     {
