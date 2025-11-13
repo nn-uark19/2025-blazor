@@ -1,9 +1,100 @@
 @page "/Events"
-@using NnBlazorProj.Components.Controls
 <h3>Events</h3>
 
-<EventComponent></EventComponent>
+@inject NavigationManager NavigationManager
+
+@* Search box: allows users to type and filter events by name dynamically *@
+<div>
+    <input @bind-value="SearchText" @bind-value:event="oninput" placeholder="Search events by name" />
+</div>
+
+@* Month buttons: renders a button for each month group *@
+<div>
+    @foreach (var mg in _monthGroups)
+    {
+        <button type="button" @onclick="() => SelectGroup(mg)">
+            @mg.Name@((_selectedMonthGroup == mg && string.IsNullOrWhiteSpace(_searchText)) ? " (selected)" : "")
+        </button>
+    }
+</div>
+
+@* Selected month display: show image and name for the active group *@
+@if (_selectedMonthGroup != null)
+{
+    <div>
+        <img src="@_selectedMonthGroup.ImagePath"
+             alt="@_selectedMonthGroup.Key"
+             width="300" height="300" />
+        <h3>@_selectedMonthGroup.Name</h3>
+    </div>
+}
+
+@* Add Event button: navigates to the Add Event page *@
+<button type="button" @onclick="AddEvent">Add Event</button>
+
+@* Event list: lists events for the selected month group *@
+@if (_eventList.Count > 0)
+{
+    <ul>
+        @foreach (var eventItem in _eventList)
+        {
+            <li>
+                <strong>@eventItem.Name</strong>
+                Month: @eventItem.Month — @(eventItem.IsFree ? "Free" : "Paid")
+                <button @onclick="() => EditEvent(eventItem.EventId)">Edit</button>
+            </li>
+        }
+    </ul>
+}
 
 @code {
+    private List<EventDto> _eventList = new();
+    private List<MonthGroup> _monthGroups = new();
+    private MonthGroup? _selectedMonthGroup;
+    private string _searchText = string.Empty;
+    private string SearchText
+    {
+        get => _searchText;
+        set
+        {
+            _searchText = value;
+            _eventList = EventRepository.SearchByName(_searchText);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        _monthGroups = MonthRepository.GetMonthGroups();
+        _selectedMonthGroup = _monthGroups.FirstOrDefault();
+
+        if (_selectedMonthGroup != null)
+        {
+            var months = _selectedMonthGroup.Months;
+            _eventList = EventRepository.GetAll()
+                .Where(e => months.Contains(e.Month))
+                .ToList();
+        }
+    }
+
+    // Triggered when the user clicks a month group button; updates the selected group and its events
+    private void SelectGroup(MonthGroup group)
+    {
+        _selectedMonthGroup = group;
+        var months = group.Months;
+        _eventList = EventRepository.GetAll()
+            .Where(e => months.Contains(e.Month))
+            .ToList();
+    }
+
+    // Triggered when the user clicks an event's Edit button; navigates to the edit page for that event id
+    private void EditEvent(int id)
+    {
+        NavigationManager.NavigateTo($"/events/edit/{id}");
+    }
     
+    // Triggered when the user clicks the Add Event button; navigates to the add-event page
+    private void AddEvent()
+    {
+        NavigationManager.NavigateTo("/events/add");
+    }
 }

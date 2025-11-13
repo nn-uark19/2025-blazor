@@ -1,94 +1,69 @@
+@* Event list: lists events for the selected month group (standalone or parent-driven) *@
 @inject NavigationManager NavigationManager
 
-@* Search box: allows users to type and filter events by name dynamically *@
-<div>
-    <input @bind-value="SearchText" @bind-value:event="oninput" placeholder="Search events by name" />
-</div>
-
-@* Month buttons: renders a button for each month group *@
-<div>
-    @foreach (var mg in _monthGroups)
-    {
-        <button type="button" @onclick="() => SelectGroup(mg)">
-            @mg.Name@((_selectedMonthGroup == mg && string.IsNullOrWhiteSpace(_searchText)) ? " (selected)" : "")
-        </button>
-    }
-</div>
-
-@* Selected month display: show image and name for the active group *@
-@if (_selectedMonthGroup != null)
-{
-    <div>
-        <img src="@_selectedMonthGroup.ImagePath"
-             alt="@_selectedMonthGroup.Key"
-             width="300" height="300" />
-        <h3>@_selectedMonthGroup.Name</h3>
-    </div>
-}
-
-@* Add Event button: navigates to the Add Event page *@
-<button type="button" @onclick="AddEvent">Add Event</button>
-
-@* Event list: lists events for the selected month group *@
-@if (_eventList.Count > 0)
+@if (_eventsToRender.Count > 0)
 {
     <ul>
-        @foreach (var e in _eventList)
+        @foreach (var e in _eventsToRender)
         {
             <li>
                 <strong>@e.Name</strong>
                 Month: @e.Month — @(e.IsFree ? "Free" : "Paid")
-                <button @onclick="() => EditEvent(e.EventId)">Edit</button>
+                <button @onclick="() => OnEditInternal(e.EventId)">Edit</button>
             </li>
         }
     </ul>
 }
+else
+{
+    <p>No events found.</p>
+}
 
 @code {
-    private List<EventDto> _eventList = new();
-    private List<MonthGroup> _monthGroups = new();
-    private MonthGroup? _selectedMonthGroup;
-    private string _searchText = string.Empty;
-    private string SearchText
+    // Optional: provide a pre-filtered list
+    [Parameter] public List<EventDto>? EventList { get; set; }
+
+    // Optional: parent can handle edit; otherwise the component will navigate to the edit page itself.
+    [Parameter] public EventCallback<int> OnEdit { get; set; }
+
+    // Optional: parent can tell the component which month group is selected so the component can filter by months
+    [Parameter] public MonthGroup? SelectedMonthGroup { get; set; }
+
+    // Optional: parent can provide a search text for name filtering (case-insensitive)
+    [Parameter] public string? SearchText { get; set; }
+
+    private List<EventDto> _eventsToRender = new();
+
+    protected override void OnParametersSet()
     {
-        get => _searchText;
-        set
+        // start with provided list or repository
+        IEnumerable<EventDto> events = EventList ?? EventRepository.GetAll();
+
+        // filter by selected month group if provided
+        if (SelectedMonthGroup != null)
         {
-            _searchText = value;
-            _eventList = EventRepository.SearchByName(_searchText);
+            var months = SelectedMonthGroup.Months;
+            events = events.Where(e => months.Contains(e.Month));
         }
-    }
 
-    protected override void OnInitialized()
-    {
-        _monthGroups = MonthRepository.GetMonthGroups();
-        _selectedMonthGroup = _monthGroups.FirstOrDefault();
-
-        if (_selectedMonthGroup != null)
+        // filter by search text if provided
+        if (!string.IsNullOrWhiteSpace(SearchText))
         {
-            var months = _selectedMonthGroup.Months;
-            _eventList = EventRepository.GetAll()
-                .Where(e => months.Contains(e.Month))
-                .ToList();
+            var q = SearchText.Trim();
+            events = events.Where(e => !string.IsNullOrWhiteSpace(e.Name) && e.Name.Contains(q, StringComparison.OrdinalIgnoreCase));
         }
+
+        _eventsToRender = events.ToList();
     }
 
-    private void SelectGroup(MonthGroup group)
+    private void OnEditInternal(int id)
     {
-        _selectedMonthGroup = group;
-        var months = group.Months;
-        _eventList = EventRepository.GetAll()
-            .Where(e => months.Contains(e.Month))
-            .ToList();
-    }
+        if (OnEdit.HasDelegate)
+        {
+            OnEdit.InvokeAsync(id);
+            return;
+        }
 
-    private void EditEvent(int id)
-    {
         NavigationManager.NavigateTo($"/events/edit/{id}");
-    }
-    
-    private void AddEvent()
-    {
-        NavigationManager.NavigateTo("/events/add");
     }
 }
