@@ -1,0 +1,31 @@
+@* Event list component: renders a virtualized list of events and handles Edit navigation or delegates to parent *@
+@inject NavigationManager NavigationManager
+
+@if (EventList != null && EventList.Count > 0)
+{
+    <ul>
+        <Virtualize Items="EventList" ItemSize="64">
+            <ItemContent Context="eventItem">
+                <li @key="eventItem.EventId">
+                    <strong>@eventItem.Name</strong>
+                    Month: @eventItem.Month — @(eventItem.IsFree ? "Free" : "Paid")
+                    <button @onclick="() => EditEvent(eventItem.EventId)">Edit</button>
+                </li>
+            </ItemContent>
+        </Virtualize>
+    </ul>
+}
+else
+{
+    <p>No events found.</p>
+}
+
+@code {
+    [Parameter] public List<EventDto>? EventList { get; set; }
+    
+    // Triggered when the user clicks an event's Edit button; navigates to the edit page for that event id
+    private void EditEvent(int id)
+    {
+        NavigationManager.NavigateTo($"/events/edit/{id}");
+    }
+}

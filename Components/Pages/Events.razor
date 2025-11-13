@@ -33,19 +33,7 @@
 <button type="button" @onclick="AddEvent">Add Event</button>
 
 @* Event list: lists events for the selected month group *@
-@if (_eventList.Count > 0)
-{
-    <ul>
-        @foreach (var eventItem in _eventList)
-        {
-            <li>
-                <strong>@eventItem.Name</strong>
-                Month: @eventItem.Month — @(eventItem.IsFree ? "Free" : "Paid")
-                <button @onclick="() => EditEvent(eventItem.EventId)">Edit</button>
-            </li>
-        }
-    </ul>
-}
+<EventListComponent EventList="_eventList" />
 
 @code {
     private List<EventDto> _eventList = new();
@@ -84,12 +72,6 @@
         _eventList = EventRepository.GetAll()
             .Where(e => months.Contains(e.Month))
             .ToList();
-    }
-
-    // Triggered when the user clicks an event's Edit button; navigates to the edit page for that event id
-    private void EditEvent(int id)
-    {
-        NavigationManager.NavigateTo($"/events/edit/{id}");
     }
     
     // Triggered when the user clicks the Add Event button; navigates to the add-event page
