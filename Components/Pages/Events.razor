@@ -3,75 +3,95 @@
 
 @inject NavigationManager NavigationManager
 
-@* Search box: allows users to type and filter events by name dynamically *@
-<div>
-    <input @bind-value="SearchText" @bind-value:event="oninput" placeholder="Search events by name" />
+<div class="container mt-3">
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <input class="form-control" placeholder="Search events by name" @bind-value="SearchText" @bind-value:event="oninput" />
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-primary" @onclick="AddEvent">Add Event</button>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <CityListComponent MonthGroups="_month_groups" SelectedMonthGroup="_selected_monthGroup" SelectMonthGroupCallBack="OnMonthSelected" />
+        </div>
+    </div>
+
+    @if (_selected_monthGroup != null)
+    {
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="@_selected_monthGroup.ImagePath" class="card-img-top" alt="@_selected_monthGroup.Key" />
+                    <div class="card-body">
+                        <h5 class="card-title">@_selected_monthGroup.Name</h5>
+                        <p class="card-text text-muted">Months: @string.Join(", ", _selected_monthGroup.Months)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <EventListComponent EventList="_event_list" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12">
+                <EventListComponent EventList="_event_list" />
+            </div>
+        </div>
+    }
 </div>
 
-@* Month buttons: renders a button for each month group *@
-<CityListComponent MonthGroups="_monthGroups" SelectedMonthGroup="_selectedMonthGroup" SelectMonthGroupCallBack="OnMonthSelected" />
-
-@* Selected month display: show image and name for the active group *@
-@if (_selectedMonthGroup != null)
-{
-    <div>
-        <img src="@_selectedMonthGroup.ImagePath"
-             alt="@_selectedMonthGroup.Key"
-             width="300" height="300" />
-        <h3>@_selectedMonthGroup.Name</h3>
-    </div>
-}
-
-@* Add Event button: navigates to the Add Event page *@
-<button type="button" @onclick="AddEvent">Add Event</button>
-
-@* Event list: lists events for the selected month group *@
-<EventListComponent EventList="_eventList" />
-
 @code {
-    private List<EventDto> _eventList = new();
-    private List<MonthGroup> _monthGroups = new();
-    private MonthGroup? _selectedMonthGroup;
-    private string _searchText = string.Empty;
+    private List<EventDto> _event_list = new();
+    private List<MonthGroup> _month_groups = new();
+    private MonthGroup? _selected_monthGroup;
+    private string _search_text = string.Empty;
+
     private string SearchText
     {
-        get => _searchText;
+        get => _search_text;
         set
         {
-            _searchText = value;
-            _eventList = EventRepository.SearchByName(_searchText);
+            _search_text = value;
+            _event_list = EventRepository.SearchByName(_search_text);
         }
     }
 
     protected override void OnInitialized()
     {
-        _monthGroups = MonthRepository.GetMonthGroups();
-        _selectedMonthGroup = _monthGroups.FirstOrDefault();
+        _month_groups = MonthRepository.GetMonthGroups();
+        _selected_monthGroup = _month_groups.FirstOrDefault();
 
-        if (_selectedMonthGroup != null)
+        if (_selected_monthGroup != null)
         {
-            var months = _selectedMonthGroup.Months;
-            _eventList = EventRepository.GetAll()
+            var months = _selected_monthGroup.Months;
+            _event_list = EventRepository.GetAll()
                 .Where(e => months.Contains(e.Month))
                 .ToList();
         }
     }
-    
+
     // Called when CityListComponent notifies parent of a month-group selection
     private void OnMonthSelected(MonthGroup? group)
     {
-        _selectedMonthGroup = group;
+        _selected_monthGroup = group;
 
-        if (_selectedMonthGroup != null)
+        if (_selected_monthGroup != null)
         {
-            var months = _selectedMonthGroup.Months;
-            _eventList = EventRepository.GetAll()
+            var months = _selected_monthGroup.Months;
+            _event_list = EventRepository.GetAll()
                 .Where(e => months.Contains(e.Month))
                 .ToList();
         }
     }
-    
-    // Triggered when the user clicks the Add Event button; navigates to the add-event page
+
+    // Triggered when the user clicks the Add Event button; navigates to the Add Event page
     private void AddEvent()
     {
         NavigationManager.NavigateTo("/events/add");

@@ -1,10 +1,11 @@
-<div>
+<div class="d-flex flex-wrap gap-2 mb-3">
     @if (MonthGroups != null)
     {
         @foreach (var monthGroup in MonthGroups)
         {
-            <button type="button" @onclick="() => SelectGroup(monthGroup)">
-                @monthGroup.Name@( SelectedMonthGroup == monthGroup ? " (selected)" : "" )
+            var selected = SelectedMonthGroup == monthGroup && string.IsNullOrWhiteSpace(SearchText);
+            <button type="button" class="btn @(selected ? "btn-secondary" : "btn-outline-secondary")" @onclick="() => SelectGroup(monthGroup)">
+                @monthGroup.Name@(selected ? " (selected)" : "")
             </button>
         }
     }
@@ -13,11 +14,15 @@
 @code {
     [Parameter] public List<MonthGroup>? MonthGroups { get; set; }
     [Parameter] public MonthGroup? SelectedMonthGroup { get; set; }
+    [Parameter] public string? SearchText { get; set; }
     [Parameter] public EventCallback<MonthGroup?> SelectMonthGroupCallBack { get; set; }
     
     // Triggered when the user clicks a month group button; notifies the parent of the selection
     private void SelectGroup(MonthGroup monthGroup)
     {
-        SelectMonthGroupCallBack.InvokeAsync(monthGroup);
+        if (SelectMonthGroupCallBack.HasDelegate)
+        {
+            _ = SelectMonthGroupCallBack.InvokeAsync(monthGroup);
+        }
     }
 }

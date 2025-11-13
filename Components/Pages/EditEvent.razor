@@ -1,36 +1,43 @@
 @page "/events/edit/{EventId:int}"
 @inject NavigationManager NavigationManager
 
-<h2>Edit Event</h2>
-@if (_eventItem != null)
-{
-    <EditForm Model="@_eventItem" OnValidSubmit="SaveForm">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2 class="mb-4">Edit Event</h2>
 
-        <div>
-            <label>Name</label><br />
-            <InputText @bind-Value="_eventItem.Name" />
-            <ValidationMessage For="@(() => _eventItem.Name)" />
-        </div>
+            @if (_eventItem != null)
+            {
+                <EditForm Model="@_eventItem" OnValidSubmit="SaveForm">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
 
-        <div>
-            <label>Month</label><br />
-            <InputNumber @bind-Value="_eventItem.Month" min="1" max="12" />
-            <ValidationMessage For="@(() => _eventItem.Month)" />
-        </div>
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <InputText class="form-control" @bind-Value="_eventItem.Name" />
+                        <ValidationMessage For="@(() => _eventItem.Name)" />
+                    </div>
 
-        <div>
-            <label>
-                <InputCheckbox @bind-Value="_eventItem.IsFree" /> Is Free
-            </label>
-        </div>
+                    <div class="mb-3">
+                        <label class="form-label">Month</label>
+                        <InputNumber class="form-control" @bind-Value="_eventItem.Month" min="1" max="12" />
+                        <ValidationMessage For="@(() => _eventItem.Month)" />
+                    </div>
 
-        <div style="margin-top:8px">
-            <button type="submit">Save</button>
+                    <div class="form-check mb-3">
+                        <InputCheckbox class="form-check-input" @bind-Value="_eventItem.IsFree" />
+                        <label class="form-check-label">Is Free</label>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                    </div>
+                </EditForm>
+            }
         </div>
-    </EditForm>
-}
+    </div>
+</div>
 
 @code {
     [Parameter]
@@ -47,6 +54,11 @@
     {
         if (_eventItem == null) return;
         EventRepository.Update(_eventItem);
+        NavigationManager.NavigateTo("/events");
+    }
+
+    private void Cancel()
+    {
         NavigationManager.NavigateTo("/events");
     }
 }

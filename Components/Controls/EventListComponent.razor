@@ -1,12 +1,18 @@
-@* Event list component *@
+@* Event list component rendered as a Bootstrap list-group *@
 
 @if (EventList != null && EventList.Count > 0)
 {
-    <ul>
-        <Virtualize Items="EventList" Context="eventItem">
-            <EventItemComponent Event="eventItem" />
+    <ul class="list-group">
+        <Virtualize Items="EventList" ItemSize="64">
+            <ItemContent Context="eventItem">
+                <EventItemComponent Event="eventItem" />
+            </ItemContent>
         </Virtualize>
     </ul>
+}
+else
+{
+    <div class="text-muted">No events found.</div>
 }
 
 @code {
