@@ -9,7 +9,10 @@
 </div>
 
 @* Month buttons: renders a button for each month group *@
-<CityListComponent MonthGroups="_monthGroups" SelectedMonthGroup="_selectedMonthGroup" SelectMonthGroupCallBack="OnMonthSelected" />
+<CityListComponent
+    MonthGroups="_monthGroups"
+    SelectedMonthGroup="_selectedMonthGroup"
+    SelectMonthGroupCallBack="OnMonthSelected" />
 
 @* Selected month display: show image and name for the active group *@
 @if (_selectedMonthGroup != null)
