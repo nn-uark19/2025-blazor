@@ -1,0 +1,18 @@
+@* Renders a single event as an <li> *@
+@inject NavigationManager NavigationManager
+
+<li @key="Event?.EventId">
+    <strong>@Event?.Name</strong>
+    Month: @Event?.Month — @(Event?.IsFree == true ? "Free" : "Paid")
+    <button @onclick="() => EditEvent(Event!.EventId)">Edit</button>
+</li>
+
+@code {
+    [Parameter] public EventDto? Event { get; set; }
+
+    // Triggered when the user clicks an event's Edit button; navigates to the edit page for that event id
+    private void EditEvent(int id)
+    {
+        NavigationManager.NavigateTo($"/events/edit/{id}");
+    }
+}
