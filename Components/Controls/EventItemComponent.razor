@@ -4,15 +4,38 @@
 <li @key="Event?.EventId">
     <strong>@Event?.Name</strong>
     Month: @Event?.Month — @(Event?.IsFree == true ? "Free" : "Paid")
+
     <button @onclick="() => EditEvent(Event!.EventId)">Edit</button>
+
+    @if (!_confirming)
+    {
+        <button @onclick="() => _confirming = true">Delete</button>
+    }
+    else
+    {
+        <button @onclick="ConfirmDelete">Yes</button>
+        <button @onclick="() => _confirming = false">No</button>
+    }
 </li>
 
 @code {
     [Parameter] public EventDto? Event { get; set; }
 
+    private bool _confirming;
+
     // Triggered when the user clicks an event's Edit button; navigates to the edit page for that event id
     private void EditEvent(int id)
     {
         NavigationManager.NavigateTo($"/events/edit/{id}");
+    }
+
+    private void ConfirmDelete()
+    {
+        _confirming = false;
+        if (Event is null) return;
+
+        // Child performs the delete directly in the repository (synchronous in this project)
+        EventRepository.Delete(Event.EventId);
+        NavigationManager.NavigateTo($"/events", true);
     }
 }
