@@ -1,4 +1,7 @@
 @page "/Events"
+
+<ProjectFeatures StartExpanded="true" />
+
 <h3>Events</h3>
 
 @inject NavigationManager NavigationManager
@@ -12,7 +15,7 @@
             transition: filter .15s ease, opacity .15s ease;
         }
     </style>
-
+    
     <div class="row mb-3 align-items-center">
         
         @* Search box: allows users to type and filter events by name dynamically *@
@@ -112,6 +115,9 @@
     // Called when CityListComponent notifies parent of a month-group selection
     private void OnMonthSelected(MonthGroup? group)
     {
+        // Clear any active search when user explicitly selects a month
+        SearchText = string.Empty;
+
         _selectedMonthGroup = group;
 
         if (_selectedMonthGroup != null)

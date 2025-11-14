@@ -1,0 +1,63 @@
+@* ProjectFeatures: a self-contained collapsible panel showing the project's features (ordered basic → advanced) *@
+<div class="project-features mb-3">
+    <button class="btn btn-link p-0 d-inline-flex align-items-center" @onclick="Toggle" @onkeydown="HandleKeyDown" aria-expanded="@_expanded" aria-controls="@_panelId">
+        <span class="chev me-2 @(_expanded ? "rotated" : "")">▶</span>
+        <span class="fw-bold">Project features (click to close) </span>
+    </button>
+
+    <div id="@_panelId" class="collapse @(_expanded ? "show" : "")">
+        <div class="card card-body mt-2">
+            <ul class="mb-0">
+                <li>
+                    <strong>List rendering (basic)</strong> — Uses <code>Virtualize</code> for efficient rendering and includes <code>key</code> on items to preserve identity and reduce re-renders.
+                </li>
+                <li>
+                    <strong>Interactive components & view state</strong> — Child components (month list, event items) raise callbacks and the page maintains the selected/month state so the UI stays in sync.
+                </li>
+                <li>
+                    <strong>Form handling & validation</strong> — Add/Edit pages use <code>EditForm</code>, data annotations and validation messages to validate inputs before submitting.
+                </li>
+                <li>
+                    <strong>Server interactivity (advanced)</strong> — The app architecture supports server-side interactions (repository/service calls) and can be extended to async/remote APIs or SignalR for realtime updates.
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool StartExpanded { get; set; }
+
+    private bool _expanded;
+    private readonly string _panelId = "project-features-" + Guid.NewGuid().ToString("N");
+
+    protected override void OnInitialized()
+    {
+        _expanded = StartExpanded;
+    }
+
+    private void Toggle()
+    {
+        _expanded = !_expanded;
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" || e.Key == " ")
+        {
+            Toggle();
+        }
+    }
+}
+
+<style>
+    .project-features .chev {
+        display: inline-block;
+        transform-origin: center;
+        transition: transform .18s ease;
+    }
+    .project-features .chev.rotated { transform: rotate(90deg); }
+
+    /* small helper to render inline code visually */
+    .project-features code { background: #f8f9fa; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: .9em; }
+</style>
