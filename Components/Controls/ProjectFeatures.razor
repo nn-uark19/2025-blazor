@@ -13,6 +13,18 @@
                 </li>
                 <li>
                     <strong>Interactive components & view state</strong> — Child components (month list, event items) raise callbacks and the page maintains the selected/month state so the UI stays in sync.
+                    <ul class="mb-0 mt-2">
+                        <li>
+                            <small>
+                                <strong>Search</strong> — Filters events as you type and updates results immediately; clearing the search restores the list filtered by the currently selected month. <span class="badge bg-success ms-2">UX win</span>
+                            </small>
+                        </li>
+                        <li>
+                            <small>
+                                <strong>Month selection</strong> — Clicking a month clears any active search and shows only events for that month group, making navigation predictable and fast.
+                            </small>
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     <strong>Form handling & validation</strong> — Add/Edit pages use <code>EditForm</code>, data annotations and validation messages to validate inputs before submitting.
@@ -49,15 +61,3 @@
         }
     }
 }
-
-<style>
-    .project-features .chev {
-        display: inline-block;
-        transform-origin: center;
-        transition: transform .18s ease;
-    }
-    .project-features .chev.rotated { transform: rotate(90deg); }
-
-    /* small helper to render inline code visually */
-    .project-features code { background: #f8f9fa; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: .9em; }
-</style>
