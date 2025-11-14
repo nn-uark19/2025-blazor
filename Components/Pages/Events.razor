@@ -4,6 +4,15 @@
 @inject NavigationManager NavigationManager
 
 <div class="container mt-3">
+    <style>
+        /* When a search is active, dim/grayscale the month image to indicate 'filtered' mode */
+        .search-active-img {
+            filter: grayscale(100%);
+            opacity: 0.65;
+            transition: filter .15s ease, opacity .15s ease;
+        }
+    </style>
+
     <div class="row mb-3 align-items-center">
         
         @* Search box: allows users to type and filter events by name dynamically *@
@@ -30,13 +39,21 @@
     
     @if (_selectedMonthGroup != null)
     {
+        var isSearchActive = !string.IsNullOrWhiteSpace(SearchText);
         <div class="row mb-4">
             @* Selected month display: show image and name for the active group *@
             <div class="col-md-4">
                 <div class="card">
-                    <img src="@_selectedMonthGroup.ImagePath" class="card-img-top" alt="@_selectedMonthGroup.Key" />
+                    <img src="@_selectedMonthGroup.ImagePath" class="card-img-top @(isSearchActive ? "search-active-img" : "")" alt="@_selectedMonthGroup.Key" />
                     <div class="card-body text-center">
-                        <h5 class="card-title">@_selectedMonthGroup.Name</h5>
+                        @if (isSearchActive)
+                        {
+                            <h5 class="card-title">Showing results for: "@SearchText"</h5>
+                        }
+                        else
+                        {
+                            <h5 class="card-title">@_selectedMonthGroup.Name</h5>
+                        }
                     </div>
                 </div>
             </div>
@@ -61,14 +78,27 @@
         set
         {
             _searchText = value;
-            _eventList = EventRepository.SearchByName(_searchText);
+            // If there's text, run search; otherwise restore the list for the current selected month
+            if (!string.IsNullOrWhiteSpace(_searchText))
+            {
+                _eventList = EventRepository.SearchByName(_searchText);
+            }
+            else
+            {
+                if (_selectedMonthGroup != null)
+                {
+                    _eventList = EventRepository.GetAll()
+                        .Where(e => _selectedMonthGroup.Months.Contains(e.Month))
+                        .ToList();
+                }
+            }
         }
     }
 
     protected override void OnInitialized()
     {
         _monthGroups = MonthRepository.GetMonthGroups();
-        _selectedMonthGroup = _monthGroups.FirstOrDefault();
+        _selectedMonthGroup = _monthGroups.LastOrDefault();
 
         if (_selectedMonthGroup != null)
         {
