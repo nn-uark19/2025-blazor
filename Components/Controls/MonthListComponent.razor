@@ -3,9 +3,12 @@
     {
         @foreach (var monthGroup in MonthGroups)
         {
+            var isSearchActive = !string.IsNullOrWhiteSpace(SearchText);
+            var isSelected = !isSearchActive && SelectedMonthGroup == monthGroup;
+
             <button
                 type="button"
-                class="btn @( SelectedMonthGroup == monthGroup ? "btn-secondary" : "btn-outline-secondary")"
+                class="btn @(isSelected ? "btn-secondary" : "btn-outline-secondary")"
                 @onclick="() => SelectGroup(monthGroup)">
                 @monthGroup.Name
             </button>
@@ -16,6 +19,8 @@
     [Parameter] public List<MonthGroup>? MonthGroups { get; set; }
     [Parameter] public MonthGroup? SelectedMonthGroup { get; set; }
     [Parameter] public EventCallback<MonthGroup?> SelectMonthGroupCallBack { get; set; }
+    
+    [Parameter] public string? SearchText { get; set; }
     
     // Triggered when the user clicks a month group button; notifies the parent of the selection
     private void SelectGroup(MonthGroup monthGroup)

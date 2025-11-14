@@ -3,13 +3,15 @@
 
 @inject NavigationManager NavigationManager
 
-@* Search box: allows users to type and filter events by name dynamically *@
-@* Add Event button: navigates to the Add Event page *@
 <div class="container mt-3">
     <div class="row mb-3 align-items-center">
+        
+        @* Search box: allows users to type and filter events by name dynamically *@
         <div class="col-md-8">
-            <input class="form-control" placeholder="Search events by name" @bind-value="SearchText" @bind-value:event="oninput" />
+            <input class="form-control" placeholder="Search events by name" @bind-value="SearchText" @bind-value:event="oninput"/>
         </div>
+
+        @* Add Event button: navigates to the Add Event page *@
         <div class="col-md-4 text-end">
             <button class="btn btn-primary" @onclick="AddEvent">Add Event</button>
         </div>
@@ -21,35 +23,27 @@
             <MonthListComponent
                 MonthGroups="_monthGroups"
                 SelectedMonthGroup="_selectedMonthGroup"
-                SelectMonthGroupCallBack="OnMonthSelected" />
+                SelectMonthGroupCallBack="OnMonthSelected"
+                SearchText="@SearchText" />
         </div>
     </div>
-
-    @* Selected month display: show image and name for the active group *@
-    @* Event list: lists events for the selected month group *@
+    
     @if (_selectedMonthGroup != null)
     {
         <div class="row mb-4">
+            @* Selected month display: show image and name for the active group *@
             <div class="col-md-4">
                 <div class="card">
                     <img src="@_selectedMonthGroup.ImagePath" class="card-img-top" alt="@_selectedMonthGroup.Key" />
-                    <div class="card-body">
+                    <div class="card-body text-center">
                         <h5 class="card-title">@_selectedMonthGroup.Name</h5>
-                        <p class="card-text text-muted">Months: @string.Join(", ", _selectedMonthGroup.Months)</p>
                     </div>
                 </div>
             </div>
 
+            @* Event list: lists events for the selected month group *@
             <div class="col-md-8">
-                <EventListComponent EventList="_eventList" />
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="row">
-            <div class="col-12">
-                <EventListComponent EventList="_eventList" />
+                <EventListComponent EventList="_eventList"/>
             </div>
         </div>
     }
