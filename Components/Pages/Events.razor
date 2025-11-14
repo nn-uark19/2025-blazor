@@ -4,38 +4,63 @@
 @inject NavigationManager NavigationManager
 
 @* Search box: allows users to type and filter events by name dynamically *@
-<div>
-    <input @bind-value="SearchText" @bind-value:event="oninput" placeholder="Search events by name" />
-</div>
-
-@* Month buttons: renders a button for each month group *@
-<MonthListComponent
-    MonthGroups="_monthGroups"
-    SelectedMonthGroup="_selectedMonthGroup"
-    SelectMonthGroupCallBack="OnMonthSelected" />
-
-@* Selected month display: show image and name for the active group *@
-@if (_selectedMonthGroup != null)
-{
-    <div>
-        <img src="@_selectedMonthGroup.ImagePath"
-             alt="@_selectedMonthGroup.Key"
-             width="300" height="300" />
-        <h3>@_selectedMonthGroup.Name</h3>
-    </div>
-}
-
 @* Add Event button: navigates to the Add Event page *@
-<button type="button" @onclick="AddEvent">Add Event</button>
+<div class="container mt-3">
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-8">
+            <input class="form-control" placeholder="Search events by name" @bind-value="SearchText" @bind-value:event="oninput" />
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-primary" @onclick="AddEvent">Add Event</button>
+        </div>
+    </div>
 
-@* Event list: lists events for the selected month group *@
-<EventListComponent EventList="_eventList" />
+    @* Month buttons: renders a button for each month group *@
+    <div class="row mb-3">
+        <div class="col-12">
+            <MonthListComponent
+                MonthGroups="_monthGroups"
+                SelectedMonthGroup="_selectedMonthGroup"
+                SelectMonthGroupCallBack="OnMonthSelected" />
+        </div>
+    </div>
+
+    @* Selected month display: show image and name for the active group *@
+    @* Event list: lists events for the selected month group *@
+    @if (_selectedMonthGroup != null)
+    {
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="@_selectedMonthGroup.ImagePath" class="card-img-top" alt="@_selectedMonthGroup.Key" />
+                    <div class="card-body">
+                        <h5 class="card-title">@_selectedMonthGroup.Name</h5>
+                        <p class="card-text text-muted">Months: @string.Join(", ", _selectedMonthGroup.Months)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <EventListComponent EventList="_eventList" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12">
+                <EventListComponent EventList="_eventList" />
+            </div>
+        </div>
+    }
+</div>
 
 @code {
     private List<EventDto> _eventList = new();
     private List<MonthGroup> _monthGroups = new();
     private MonthGroup? _selectedMonthGroup;
     private string _searchText = string.Empty;
+
     private string SearchText
     {
         get => _searchText;
@@ -59,7 +84,7 @@
                 .ToList();
         }
     }
-    
+
     // Called when CityListComponent notifies parent of a month-group selection
     private void OnMonthSelected(MonthGroup? group)
     {
@@ -73,7 +98,7 @@
                 .ToList();
         }
     }
-    
+
     // Triggered when the user clicks the Add Event button; navigates to the add-event page
     private void AddEvent()
     {
